@@ -1,0 +1,6 @@
+.env
+__pycache__/
+*.pyc
+dist/
+test_brevo_debug.py
+.DS_Store

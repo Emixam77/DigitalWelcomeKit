@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générez votre Livret d'Accueil Digital | DigitalWelcomeKit</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500;600;700&family=Playfair+Display+SC:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-light: #818CF8;
+            --bg-glass: rgba(255, 255, 255, 0.95);
+            --bg-main: #EEF2FF;
+            --text-main: #1E1B4B;
+        }
+
+        body {
+            font-family: 'Karla', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+        }
+
+        .heading-serif {
+            font-family: 'Playfair Display SC', serif;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            border: 2px solid #E2E8F0;
+            outline: none;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .preview-container {
+            height: 90vh;
+            overflow-y: auto;
+            border: 8px solid #1E1B4B;
+            border-radius: 3rem;
+            background: #EEF2FF;
+            position: sticky;
+            top: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Responsive Preview */
+        @media (max-width: 1024px) {
+            .preview-container {
+                display: none;
+            }
+        }
+
+        .btn-generate {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            font-weight: 800;
+            padding: 1.25rem 2rem;
+            border-radius: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-generate:hover {
+            transform: scale(1.02) translateY(-2px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+        }
+        
+        .glass-card-preview {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 1.5rem;
+            border: 1px solid white;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 lg:p-12">
+    <!-- Main Center Layout -->
+    <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-12 items-center lg:items-start">
+        
+        <!-- Left: Form -->
+        <div class="flex-1 space-y-10 w-full">
+            <header class="text-center lg:text-left">
+                <h1 class="heading-serif text-2xl md:text-3xl mb-4 font-black text-indigo-900 tracking-tight">Créez votre Livret d'Accueil Digital</h1>
+                <p class="text-lg opacity-80 font-medium">
+                    L'outil qui enchante vos voyageurs. 
+                    <br class="hidden md:block">
+                    <span class="font-bold">Le voyageur pourra simplement scanner le QR Code et avoir toutes les informations. Le propriétaire peut l'imprimer et le laisser dans l'appartement.</span> ✨
+                </p>
+            </header>
+
+            <form id="builder-form" class="space-y-10 bg-white/50 p-8 md:p-10 rounded-[2.5rem] border-2 border-white shadow-xl transition-all duration-500">
+                <!-- Step 1 -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">1</div>
+                        <h2 class="text-xl font-black uppercase tracking-wider">Logement & Hôte</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold uppercase opacity-50 mb-2">Nom du logement</label>
+                            <input type="text" id="prop-name" placeholder="ex: Le Mas des Glycines" class="input-field" required oninput="updatePreview()">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase opacity-50 mb-2">Tel. Hôte</label>
+                            <input type="text" id="host-phone" placeholder="ex: 06 12 34 56 78" class="input-field" required oninput="updatePreview()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">2</div>
+                        <h2 class="text-xl font-black uppercase tracking-wider">Configuration Wi-Fi</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold uppercase opacity-50 mb-2">Nom du Réseau</label>
+                            <input type="text" id="wifi-ssid" placeholder="ex: GLYCINES_GUEST" class="input-field" required oninput="updatePreview()">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase opacity-50 mb-2">Mot de passe</label>
+                            <input type="text" id="wifi-pass" placeholder="ex: ********" class="input-field" required oninput="updatePreview()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">3</div>
+                        <h2 class="text-xl font-black uppercase tracking-wider">Instructions & Guide</h2>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase opacity-50 mb-2">Consignes d'arrivée</label>
+                        <textarea id="instructions" rows="4" placeholder="Code digicode, boîtier à clés, parking..." class="input-field" required oninput="updatePreview()"></textarea>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">4</div>
+                        <h2 class="text-xl font-black uppercase tracking-wider">Vos bonnes adresses</h2>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="p-4 bg-indigo-50/50 rounded-2xl space-y-3">
+                            <input type="text" placeholder="Restaurant 1 : Nom" class="input-field" oninput="updatePreview()">
+                            <input type="text" placeholder="Adresse Restaurant 1 (pour Google Maps)" class="input-field text-sm" oninput="updatePreview()">
+                        </div>
+                        <div class="p-4 bg-indigo-50/50 rounded-2xl space-y-3">
+                            <input type="text" placeholder="Restaurant 2 : Nom" class="input-field" oninput="updatePreview()">
+                            <input type="text" placeholder="Adresse Restaurant 2 (pour Google Maps)" class="input-field text-sm" oninput="updatePreview()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lead Capture -->
+                <div class="pt-6 border-t border-indigo-100">
+                    <label class="block text-sm font-bold text-indigo-900 mb-2">Où m'envoyer mon pack (HTML + QR Codes) ?</label>
+                    <input type="email" id="lead-email" placeholder="votre@email.com" class="input-field" required>
+                    <p class="text-[10px] opacity-40 mt-2 italic px-2">Nous ne spammons jamais. Vos données sont en sécurité.</p>
+                </div>
+
+                <button type="submit" class="btn-generate w-full">
+                    Générer mon Pack & QR Codes ✨
+                </button>
+            </form>
+
+            <!-- SUCCESS SECTION (Hidden by default) -->
+            <div id="success-section" class="hidden animate-in fade-in zoom-in duration-700 bg-white/80 p-12 md:p-16 rounded-[3rem] border-4 border-emerald-400/30 shadow-2xl text-center space-y-8">
+                <div class="bg-emerald-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i data-lucide="check-circle-2" class="w-12 h-12 text-emerald-600"></i>
+                </div>
+                <h2 class="heading-serif text-3xl font-black text-indigo-900">Félicitations ! Votre Livret est prêt. ✨</h2>
+                <div class="space-y-4">
+                    <p class="text-lg text-indigo-900/70 font-medium">
+                        Un email récapitulatif a été envoyé à : <br>
+                        <span id="success-email" class="font-bold text-indigo-600 underline text-xl"></span>
+                    </p>
+                    <p class="text-sm opacity-50">Vous pouvez maintenant consulter, imprimer et partager votre livret d'accueil digital.</p>
+                </div>
+                
+                <div class="pt-6">
+                    <a id="view-kit-btn" href="#" target="_blank" class="btn-generate inline-flex items-center gap-3 no-underline">
+                        <i data-lucide="external-link" class="w-6 h-6"></i>
+                        Voir mon Livret d'Accueil (Prêt à imprimer)
+                    </a>
+                </div>
+                
+                <button onclick="window.location.reload()" class="text-xs font-bold uppercase tracking-widest opacity-30 hover:opacity-100 transition-opacity">
+                    ← Créer un autre livret
+                </button>
+            </div>
+        </div>
+
+        <!-- Right: Live Preview -->
+        <div class="lg:w-[450px] w-full max-w-[450px] hidden lg:block">
+            <div class="sticky top-8">
+                <div class="text-center mb-4">
+                    <span class="bg-indigo-900 text-white text-[10px] font-black uppercase px-6 py-2 rounded-full shadow-lg">Rendu Live Voyageur</span>
+                </div>
+                
+                <div class="preview-container p-6">
+                    <!-- Mini Template Simulation -->
+                    <div class="bg-indigo-900 rounded-3xl p-8 text-white text-center mb-8 shadow-xl border border-white/20">
+                        <i data-lucide="home" class="w-8 h-8 mx-auto mb-4 opacity-70"></i>
+                        <h3 id="prev-name" class="heading-serif text-2xl font-bold tracking-tight">Mas des Glycines</h3>
+                        <p class="text-[10px] opacity-60 italic mt-3 font-medium uppercase tracking-widest">Bienvenue chez vous</p>
+                    </div>
+
+                    <div class="glass-card-preview border-l-8 border-indigo-600">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i data-lucide="wifi" class="w-5 h-5 text-indigo-600"></i>
+                            <h4 class="text-[10px] font-black uppercase tracking-[0.2em] opacity-50">Connexion Wi-Fi</h4>
+                        </div>
+                        <p class="text-sm font-bold text-indigo-900" id="prev-ssid">Réseau : ...</p>
+                        <p class="text-xs opacity-60 font-mono mt-1" id="prev-pass">Code : ...</p>
+                        <div class="mt-6 bg-white p-4 inline-block rounded-2xl shadow-inner border border-indigo-50">
+                            <i data-lucide="qr-code" class="w-16 h-16 text-indigo-900 opacity-40"></i>
+                        </div>
+                    </div>
+
+                    <div class="glass-card-preview">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-emerald-600"></i>
+                            <h4 class="text-[10px] font-black uppercase tracking-[0.2em] opacity-50">Autour de vous</h4>
+                        </div>
+                        <div class="space-y-2">
+                             <div class="bg-indigo-50/50 p-2 rounded-lg text-[10px] font-bold">📍 Recommandation 1</div>
+                             <div class="bg-indigo-50/50 p-2 rounded-lg text-[10px] font-bold">📍 Recommandation 2</div>
+                        </div>
+                    </div>
+
+                    <div class="text-center py-6">
+                        <div class="inline-block p-6 bg-white/50 rounded-3xl border-2 border-dashed border-indigo-300">
+                             <i data-lucide="printer" class="w-8 h-8 text-indigo-500"></i>
+                        </div>
+                        <p class="text-[9px] mt-4 font-black opacity-30 uppercase tracking-[0.2em]">Prêt pour impression Proprio</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function updatePreview() {
+            const name = document.getElementById('prop-name').value || 'Votre Logement';
+            const ssid = document.getElementById('wifi-ssid').value || '...';
+            const pass = document.getElementById('wifi-pass').value || '...';
+
+            document.getElementById('prev-name').innerText = name;
+            document.getElementById('prev-ssid').innerText = 'Réseau : ' + ssid;
+            document.getElementById('prev-pass').innerText = 'Code : ' + pass;
+        }
+
+        document.getElementById('builder-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            
+            // Set Loading State
+            btn.innerHTML = '<span class="animate-spin mr-2">⏳</span> Génération en cours...';
+            btn.style.opacity = '0.7';
+            btn.disabled = true;
+
+            const formData = {
+                property_name: document.getElementById('prop-name').value,
+                host_phone: document.getElementById('host-phone').value,
+                wifi_ssid: document.getElementById('wifi-ssid').value,
+                wifi_pass: document.getElementById('wifi-pass').value,
+                instructions: document.getElementById('instructions').value,
+                email: document.getElementById('lead-email').value,
+                // Mocking coordinates for demo if not provided
+                address: "Paris, France", 
+                restaurants: [
+                    { name: "La Belle Epoque", address: "Paris" },
+                    { name: "Le Petit Nice", address: "Marseille" }
+                ]
+            };
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Hide form, show success
+                    document.getElementById('builder-form').classList.add('hidden');
+                    document.getElementById('success-section').classList.remove('hidden');
+                    
+                    // Populate success screen
+                    document.getElementById('success-email').innerText = formData.email;
+                    document.getElementById('view-kit-btn').href = result.preview_url;
+                    
+                    // Re-init icons for the new section
+                    lucide.createIcons();
+                } else {
+                    alert('❌ Erreur : ' + (result.error || 'Une erreur est survenue.'));
+                }
+            } catch (err) {
+                console.error(err);
+                alert('❌ Erreur de connexion au serveur backend (Assurez-vous que app.py est lancé).');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.style.opacity = '1';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

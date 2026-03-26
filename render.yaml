@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: digital-welcome-kit
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: BREVO_API_KEY
+        sync: false
+      - key: BREVO_LIST_ID
+        sync: false
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false
