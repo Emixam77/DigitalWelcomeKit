@@ -17,9 +17,9 @@ class BrevoManager:
             "api-key": self.api_key
         }
 
-    def add_contact(self, email, list_ids=None):
+    def add_contact(self, email, list_ids=None, attributes=None):
         """
-        Ajoute un contact à une ou plusieurs listes Brevo.
+        Ajoute un contact à une ou plusieurs listes Brevo avec des attributs.
         """
         if list_ids is None:
             list_ids = [int(os.getenv("BREVO_LIST_ID", 12))]
@@ -30,6 +30,9 @@ class BrevoManager:
             "listIds": list_ids,
             "updateEnabled": True
         }
+        
+        if attributes:
+            payload["attributes"] = attributes
         
         try:
             response = requests.post(url, json=payload, headers=self.headers)
